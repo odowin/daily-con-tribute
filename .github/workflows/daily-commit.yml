@@ -24,7 +24,7 @@ jobs:
 
         for i in $(seq 1 $NUM_COMMITS); do
           # Delay aléatoire entre 0 et 1800 secondes (0 à 30 minutes)
-          DELAY=$((RANDOM % 1800))
+          DELAY=$((RANDOM % 3))
           echo "Attente aléatoire de $DELAY secondes avant le commit $i"
           sleep $DELAY
 
