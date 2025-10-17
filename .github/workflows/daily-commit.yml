@@ -1,0 +1,37 @@
+name: Random Daily Commits
+
+on:
+  schedule:
+    # Toutes les heures de 9h à 17h UTC
+    - cron: '0 9-17 * * *'
+  workflow_dispatch:
+
+jobs:
+  random-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Make random commits with random delay
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "actions@github.com"
+
+        # Nombre aléatoire de commits (0 à 3)
+        NUM_COMMITS=$((RANDOM % 4))
+
+        for i in $(seq 1 $NUM_COMMITS); do
+          # Delay aléatoire entre 0 et 1800 secondes (0 à 30 minutes)
+          DELAY=$((RANDOM % 1800))
+          echo "Attente aléatoire de $DELAY secondes avant le commit $i"
+          sleep $DELAY
+
+          # Ajouter le commit
+          echo "Commit aléatoire du $(date)" >> daily.txt
+          git add daily.txt
+          git commit -m "Random commit $(date)" || echo "No changes to commit"
+        done
+
+        git push || echo "Nothing to push but my SM is happy"
